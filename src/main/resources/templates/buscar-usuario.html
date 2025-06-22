@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Buscar Usuario por ID</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fdfdfd;
+      padding: 50px;
+      text-align: center;
+    }
+
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      font-size: 16px;
+    }
+
+    .resultado {
+      margin-top: 30px;
+      border: 1px solid #ccc;
+      padding: 20px;
+      display: inline-block;
+      background-color: #f9f9f9;
+      border-radius: 10px;
+      max-width: 400px;
+    }
+
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Buscar Usuario por ID</h1>
+
+  <form method="post" th:action="@{/buscar-usuario}">
+    <input type="number" name="id" placeholder="Ingrese ID del usuario" required />
+    <button type="submit">Buscar</button>
+  </form>
+
+  <div th:if="${usuario}" class="resultado">
+    <h3 th:text="${usuario.nombre} + ' ' + ${usuario.apellido}"></h3>
+    <p><strong>ID:</strong> <span th:text="${usuario.id}"></span></p>
+    <p><strong>Usuario:</strong> <span th:text="${usuario.usuario}"></span></p>
+    <p><strong>Correo:</strong> <span th:text="${usuario.correo}"></span></p>
+    <p><strong>DNI:</strong> <span th:text="${usuario.dni}"></span></p>
+    <p><strong>Celular:</strong> <span th:text="${usuario.celular}"></span></p>
+    <p><strong>Rol:</strong> <span th:text="${usuario.rol}"></span></p>
+  </div>
+
+  <div th:if="${error}" class="error">
+    <p th:text="${error}"></p>
+  </div>
+
+</body>
+</html>
