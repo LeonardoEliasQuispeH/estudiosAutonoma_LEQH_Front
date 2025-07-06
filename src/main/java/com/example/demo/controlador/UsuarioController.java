@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Controller
@@ -49,36 +50,42 @@ public class UsuarioController {
         return "usuarios"; // JSP: usuarios.jsp
     }
 
-    @PostMapping("/buscar-usuario")
+        @PostMapping("/buscar-usuario")
     public String buscarUsuarioPorId(@RequestParam Long id, Model model) {
+        model.addAttribute("idBuscado", id); // Guardamos el ID buscado
+
         try {
             HttpHeaders headers = new HttpHeaders();
-            headers.set("User-Agent", "Mozilla/5.0"); // por si lo necesita
+            headers.set("User-Agent", "Mozilla/5.0");
 
             HttpEntity<String> entity = new HttpEntity<>(headers);
             String url = API_URL_2 + "/usuarios/buscar/" + id;
 
             ResponseEntity<Usuario> response = new RestTemplate().exchange(
-                    url,
-                    HttpMethod.GET,
-                    entity,
-                    Usuario.class
+                url,
+                HttpMethod.GET,
+                entity,
+                Usuario.class
             );
 
             Usuario usuario = response.getBody();
 
-            if (usuario != null) {
+            if (response.getStatusCode().is2xxSuccessful() && usuario != null && usuario.getNombre() != null) {
                 model.addAttribute("usuario", usuario);
             } else {
-                model.addAttribute("error", "No se encontró el usuario con ese ID.");
+                model.addAttribute("usuario", new Usuario()); // Para que entre al bloque del front
             }
 
+        } catch (HttpClientErrorException.NotFound e) {
+            model.addAttribute("error", "Usuario con ID " + id + " no existe.");
         } catch (Exception e) {
             model.addAttribute("error", "Error al buscar el usuario: " + e.getMessage());
         }
 
-        return "buscar-usuario"; // página de resultado
+        return "buscar-usuario";
     }
+
+
 
 
 
