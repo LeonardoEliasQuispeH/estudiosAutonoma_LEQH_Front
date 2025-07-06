@@ -11,10 +11,32 @@
       text-align: center;
     }
 
+    h1 {
+      color: #333;
+      margin-bottom: 30px;
+    }
+
+    form {
+      margin-bottom: 20px;
+    }
+
     input, button {
       padding: 10px;
       margin: 10px;
       font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #3498db;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2980b9;
     }
 
     .resultado {
@@ -25,10 +47,12 @@
       background-color: #f9f9f9;
       border-radius: 10px;
       max-width: 400px;
+      text-align: left;
     }
 
     .error {
       color: red;
+      margin-top: 20px;
     }
   </style>
 </head>
@@ -36,13 +60,16 @@
 
   <h1>Buscar Usuario por ID</h1>
 
-  <form method="post" th:action="@{/buscar-usuario}">
+  <!-- Formulario para buscar -->
+  <form method="post" action="/buscar-usuario">
     <input type="number" name="id" placeholder="Ingrese ID del usuario" required />
     <button type="submit">Buscar</button>
   </form>
 
-  <div th:if="${usuario}" class="resultado">
-    <h3 th:text="${usuario.nombre} + ' ' + ${usuario.apellido}"></h3>
+  <!-- Mostrar resultados SOLO si el nombre y apellido existen -->
+ <div class="resultado" th:if="${usuario != null}">
+  <div th:if="${usuario.nombre != null}">
+    <h3 th:text="${usuario.nombre + ' ' + usuario.apellido}"></h3>
     <p><strong>ID:</strong> <span th:text="${usuario.id}"></span></p>
     <p><strong>Usuario:</strong> <span th:text="${usuario.usuario}"></span></p>
     <p><strong>Correo:</strong> <span th:text="${usuario.correo}"></span></p>
@@ -50,8 +77,13 @@
     <p><strong>Celular:</strong> <span th:text="${usuario.celular}"></span></p>
     <p><strong>Rol:</strong> <span th:text="${usuario.rol}"></span></p>
   </div>
+  <div th:if="${usuario.nombre == null}">
+    <p><strong>Usuario con ID <span th:text="${idBuscado}"></span> no encontrado.</strong></p>
+  </div>
+</div> 
 
-  <div th:if="${error}" class="error">
+  <!-- Si hay error, mostrar mensaje -->
+  <div th:if="${error != null}" class="error">
     <p th:text="${error}"></p>
   </div>
 
