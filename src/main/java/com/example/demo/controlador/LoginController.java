@@ -11,6 +11,8 @@ import com.example.demo.Dto.LoginRequest;
 import com.example.demo.Servicio.LoginService;
 import com.example.demo.modelo.Usuario;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class LoginController {
     
@@ -23,15 +25,15 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String procesarLogin(@ModelAttribute LoginRequest loginRequest, Model model) {
+    public String procesarLogin(@ModelAttribute LoginRequest loginRequest, HttpSession session) {
         Usuario usuario = loginService.autenticar(loginRequest);
         if (usuario != null) {
-            model.addAttribute("usuario", usuario);
-            return "inicio"; // index.jsp o index.html
+            session.setAttribute("usuario", usuario);
+            return "redirect:/inicio";
         } else {
-            model.addAttribute("error", "Usuario o contraseña incorrectos");
-            return "login";
+            return "redirect:/login?error=true";
         }
     }
+
 
 }

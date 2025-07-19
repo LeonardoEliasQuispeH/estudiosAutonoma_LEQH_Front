@@ -2,10 +2,14 @@ package com.example.demo.controlador;
 
 import com.example.demo.modelo.Usuario;
 
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpClientErrorException;
@@ -14,12 +18,19 @@ import org.springframework.web.client.RestTemplate;
 @Controller
 public class UsuarioController {
 
-    private final String API_URL = "https://api.allorigins.win/raw?url=http://servicioestudios-ewdpfvhpdgg4ekb8.canadacentral-01.azurewebsites.net/usuarios/listar";
-    private final String API_URL_2 = "https://api.allorigins.win/raw?url=http://servicioestudios-ewdpfvhpdgg4ekb8.canadacentral-01.azurewebsites.net";
+    private final String API_URL = "https://servicioestudios-ewdpfvhpdgg4ekb8.canadacentral-01.azurewebsites.net/usuarios/listar";
+    private final String API_URL_2 = "https://servicioestudios-ewdpfvhpdgg4ekb8.canadacentral-01.azurewebsites.net";
 
     @GetMapping("/")
     public String inicio() {
         return "login";
+    }
+
+    @GetMapping("/inicio")
+    public String mostrarInicio(HttpSession session, Model model) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        model.addAttribute("usuario", usuario);
+        return "inicio";
     }
 
     @GetMapping("/buscar-usuario")
@@ -85,6 +96,82 @@ public class UsuarioController {
         return "buscar-usuario";
     }
 
+    // 👉 Eliminar usuario
+    @GetMapping("/eliminar-usuario/{id}")
+    public String eliminarUsuario(@PathVariable Long id) {
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            String url = API_URL_2 + "/usuarios/eliminar/" + id;
+            restTemplate.delete(url);
+        } catch (Exception e) {
+            System.out.println("❌ Error al eliminar usuario: " + e.getMessage());
+        }
+        return "redirect:/listar";
+    }
+
+    //CREAR USUARIO
+
+    @GetMapping("/crear-usuario")
+    public String mostrarFormularioCrear(Model model) {
+        model.addAttribute("usuario", new Usuario());
+        return "crear-usuario";
+    }
+
+    @PostMapping("/crear-usuario")
+    public String crearUsuario(@ModelAttribute Usuario usuario, Model model) {
+        try {
+            String url = API_URL_2 + "/usuarios/crear";
+            RestTemplate restTemplate = new RestTemplate();
+
+            System.out.println("Enviando usuario: " + usuario);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<Usuario> request = new HttpEntity<>(usuario, headers);
+
+            restTemplate.postForEntity(url, request, Void.class);
+            return "redirect:/listar";
+        }catch (Exception e) {
+            e.printStackTrace(); // muestra el error en consola
+            model.addAttribute("error", "Error al crear usuario: " + e.getMessage());
+            return "crear-usuario";
+        }
+    }
+
+    //EDITAR USUARIO
+    @GetMapping("/editar-usuario/{id}")
+    public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
+        try {
+            String url = API_URL_2 + "/usuarios/buscar/" + id;
+            RestTemplate restTemplate = new RestTemplate();
+
+            Usuario usuario = restTemplate.getForObject(url, Usuario.class);
+            model.addAttribute("usuario", usuario);
+
+            return "editar-usuario";
+        } catch (Exception e) {
+            model.addAttribute("error", "No se pudo cargar el usuario: " + e.getMessage());
+            return "redirect:/listar";
+        }
+    }
+
+    @PostMapping("/editar-usuario")
+    public String actualizarUsuario(@ModelAttribute Usuario usuario, Model model) {
+        try {
+            String url = API_URL_2 + "/usuarios/actualizar/" + usuario.getId();
+            RestTemplate restTemplate = new RestTemplate();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<Usuario> request = new HttpEntity<>(usuario, headers);
+
+            restTemplate.exchange(url, HttpMethod.PUT, request, Void.class);
+            return "redirect:/listar";
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al actualizar el usuario: " + e.getMessage());
+            return "editar-usuario";
+        }
+    }
 
 
 
