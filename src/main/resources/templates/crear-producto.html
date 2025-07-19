@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Crear Producto</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+    }
+
+    h2 {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    form {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+      box-sizing: border-box;
+      transition: border-color 0.3s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #28a745;
+      outline: none;
+    }
+
+    select {
+      background-color: #fff;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20fill='%23212121'%20height='24'%20viewBox='0%200%2024%2024'%20width='24'%20xmlns='http://www.w3.org/2000/svg'%3E%3Cpath%20d='M7%2010l5%205%205-5z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 20px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #28a745;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    .error {
+      color: red;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .volver {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    .volver:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Crear Nuevo Producto</h2>
+
+  <form th:action="@{/crear-producto}" method="post" th:object="${producto}">
+    <label>Nombre:</label>
+    <input type="text" th:field="*{nombre}" required />
+
+    <label>Cantidad:</label>
+    <input type="number" th:field="*{cantidad}" required min="0" />
+
+    <label>Talla:</label>
+    <input type="text" th:field="*{tralla}" required />
+
+    <label>Descripción:</label>
+    <textarea th:field="*{descripcion}" required></textarea>
+
+    <label>Estado:</label>
+    <select th:field="*{estado}" required>
+      <option value="disponible">Disponible</option>
+      <option value="agotado">Agotado</option>
+    </select>
+
+    <button type="submit">Guardar Producto</button>
+  </form>
+
+  <div th:if="${error}" class="error">
+    <p th:text="${error}"></p>
+  </div>
+
+  <a th:href="@{/listar-productos}" class="volver">← Volver al listado</a>
+
+</body>
+</html>

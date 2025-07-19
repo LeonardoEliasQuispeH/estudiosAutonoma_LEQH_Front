@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Listado de Usuarios</title>
+  <title>Listado de Productos</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -71,52 +71,48 @@
 </head>
 <body>
 
-  <h1>Usuarios</h1>
+  <h1>Listado de Productos</h1>
 
-  <a href="/crear-usuario" class="crear-btn">Crear Usuario</a>
+  <a href="/crear-producto" class="crear-btn">Crear Producto</a>
 
   <table>
     <thead>
       <tr>
         <th>ID</th>
-        <th>Usuario</th>
         <th>Nombre</th>
-        <th>Apellido</th>
-        <th>Correo</th>
-        <th>DNI</th>
-        <th>Celular</th>
-        <th>Rol</th>
+        <th>Cantidad</th>
+        <th>Talla</th>
+        <th>Descripción</th>
+        <th>Estado</th>
         <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
-      <tr th:each="u : ${usuarios}">
-        <td th:text="${u.id}"></td>
-        <td th:text="${u.usuario}"></td>
-        <td th:text="${u.nombre}"></td>
-        <td th:text="${u.apellido}"></td>
-        <td th:text="${u.correo}"></td>
-        <td th:text="${u.dni}"></td>
-        <td th:text="${u.celular}"></td>
-        <td th:text="${u.rol}"></td>
+      <tr th:each="p : ${productos}">
+        <td th:text="${p.id}"></td>
+        <td th:text="${p.nombre}"></td>
+        <td th:text="${p.cantidad}"></td>
+        <td th:text="${p.tralla}"></td>
+        <td th:text="${p.descripcion}"></td>
+        <td th:text="${p.estado}"></td>
         <td class="acciones">
-          <a th:href="@{/editar-usuario/{id}(id=${u.id})}">
+          <a th:href="@{/editar-producto/{id}(id=${p.id})}">
             <button class="editar">Actualizar</button>
           </a>
-          <a th:href="@{/eliminar-usuario/{id}(id=${u.id})}" 
-             onclick="return confirm('¿Estás seguro de eliminar este usuario?')">
+          <a th:href="@{/eliminar-producto/{id}(id=${p.id})}" 
+             onclick="return confirm('¿Estás seguro de eliminar este producto?')">
             <button class="eliminar">Eliminar</button>
           </a>
         </td>
       </tr>
 
-      <tr th:if="${#lists.isEmpty(usuarios)}">
-        <td colspan="9" style="text-align:center;">No se encontraron usuarios.</td>
+      <tr th:if="${#lists.isEmpty(productos)}">
+        <td colspan="7" style="text-align:center;">No se encontraron productos.</td>
       </tr>
     </tbody>
   </table>
 
-  <!-- Botón para volver al login -->
+  <!-- Botón para volver al inicio -->
   <div style="text-align:center; margin-top: 20px;">
     <a href="/inicio" class="crear-btn">Volver al inicio</a>
   </div>

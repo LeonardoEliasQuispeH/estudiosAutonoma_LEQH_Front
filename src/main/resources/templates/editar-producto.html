@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Editar Producto</title>
+  <style>
+    form {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background: #f9f9f9;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      font-size: 15px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    a {
+      display: inline-block;
+      margin-top: 15px;
+      text-align: center;
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+  <h2 style="text-align: center;">Editar Producto</h2>
+
+  <form th:action="@{/editar-producto}" method="post" th:object="${producto}">
+    <input type="hidden" th:field="*{id}" />
+
+    <label>Nombre:</label>
+    <input type="text" th:field="*{nombre}" required />
+
+    <label>Cantidad:</label>
+    <input type="number" th:field="*{cantidad}" required min="0" />
+
+    <label>Talla:</label>
+    <input type="text" th:field="*{tralla}" required />
+
+    <label>Descripción:</label>
+    <textarea th:field="*{descripcion}" required></textarea>
+
+    <label>Estado:</label>
+    <select th:field="*{estado}" required>
+      <option value="disponible">Disponible</option>
+      <option value="agotado">Agotado</option>
+    </select>
+
+    <button type="submit">Actualizar Producto</button>
+  </form>
+
+  <div style="text-align:center;">
+    <a th:href="@{/listar-productos}">← Volver al listado</a>
+  </div>
+</body>
+</html>
