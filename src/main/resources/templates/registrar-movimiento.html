@@ -114,7 +114,7 @@
       if (tipoMovimiento === "salida" && cantidadRegistrar > cantidadDisponible) {
         e.preventDefault(); // bloquea el envío del formulario
         alert(
-          `No se puede registrar salida con cantidad (${cantidadRegistrar}) mayor a la disponible (${cantidadDisponible}).`
+          `No se puede registrar salida de este producto. La cantidad que desea registrar es mayor a la disponible.`
         );
         inputCantidadRegistrar.focus();
       }
