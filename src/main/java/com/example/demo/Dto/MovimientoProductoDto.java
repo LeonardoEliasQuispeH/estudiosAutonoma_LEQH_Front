@@ -9,6 +9,8 @@ public class MovimientoProductoDto {
     private int cantidadMovimiento;
 
     
+    public MovimientoProductoDto() {
+    }
     public Long getIdMovimiento() {
         return idMovimiento;
     }
